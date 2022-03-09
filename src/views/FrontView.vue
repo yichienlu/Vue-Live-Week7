@@ -1,0 +1,29 @@
+<template>
+  <!-- <FrontNavbar /> -->
+  <FrontNav/>
+
+  <router-view></router-view>
+
+  <div class="d-lg-none position-sticky bottom-0 bg-light" style="z-index:1000">
+    <div class="container d-flex justify-content-between">
+      <FrontCart/>
+      <FrontMember/>
+    </div>
+  </div>
+</template>
+
+<script>
+// import FrontNavbar from '@/components/FrontNavbar.vue'
+import FrontMember from '@/components/FrontMember.vue'
+import FrontCart from '@/components/FrontCart.vue'
+import FrontNav from '@/components/FrontNav.vue'
+
+export default {
+  components: {
+    // FrontNavbar,
+    FrontMember,
+    FrontCart,
+    FrontNav
+  }
+}
+</script>
