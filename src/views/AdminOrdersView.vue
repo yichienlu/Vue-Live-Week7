@@ -1,6 +1,6 @@
 <template>
-  <div class="container">
-    <h1>Admin Orders</h1>
+  <div class="container my-5">
+    <h1>訂單管理</h1>
     <Loading-component :active="isLoading"></Loading-component>
 
     <!-- 訂單modal -->
@@ -88,7 +88,8 @@ export default {
       orders: [],
       tempOrder: {},
       pagination: {},
-      currentPage: 1
+      currentPage: 1,
+      isLoading: false
     }
   },
   components: {

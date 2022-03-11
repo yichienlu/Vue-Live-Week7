@@ -18,9 +18,9 @@
       <h5>購物車</h5>
       <button type="button" class="btn btn-close" data-bs-toggle="collapse" data-bs-target="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample"></button>
     </div>
-    <div v-if="cartData.carts.length == 0" class="my-5 text-center">
+    <div v-if="cartData.carts.length == 0" class="my-5 text-center"  >
       <router-link to="/products">
-        購物車裡沒有東西！快去逛逛吧！！
+        <span data-bs-toggle="collapse" data-bs-target="#collapseExample">購物車裡沒有東西！快去逛逛吧！！</span>
       </router-link>
     </div>
     <div v-else>

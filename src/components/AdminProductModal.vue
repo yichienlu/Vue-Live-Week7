@@ -17,8 +17,8 @@
                 <label for="imageUrl" class="form-label">圖片網址</label>
                 <input id="imageUrl" v-model="tempProduct.imageUrl" type="text" class="form-control form-control-sm mb-2" placeholder="請輸入圖片連結">
                 <div class="input-group input-group-sm mb-2">
-                  <input type="file" class="form-control" id="input-imageUrl" aria-label="Upload" ref="file">
-                  <button class="btn btn-outline-secondary" :disabled="!$refs.file?.value" type="button" id="upload-imageUrl" @click="uploadImage">上傳</button>
+                  <input type="file" class="form-control" id="input-imageUrl" aria-label="Upload" ref="file" @change="getImgData">
+                  <button class="btn btn-outline-secondary" :disabled="!imgData" type="button" id="upload-imageUrl" @click="uploadImage">上傳</button>
                 </div>
                 <img class="img-fluid" :src="tempProduct.imageUrl">
               </div>
@@ -29,15 +29,15 @@
                   <input :id="`imageUrl${key}`" v-model="tempProduct.imagesUrl[key]" type="text" class="form-control form-control-sm mb-2"
                     placeholder="請輸入圖片連結">
                 <div class="input-group input-group-sm mb-2">
-                  <input type="file" class="form-control" id="`input-imagesUrl${key}`" aria-label="Upload" :ref="`file${key}`" data-images="imagesUrl">
-                  <button class="btn btn-outline-secondary" type="button" id="`upload-imagesUrl${key}`" @click="uploadImages(key)">上傳</button>
+                  <input type="file" class="form-control" id="`input-imagesUrl${key}`" aria-label="Upload" :ref="`file${key}`" data-images="imagesUrl" @change="getImgsData(key)">
+                  <button class="btn btn-outline-secondary" :disabled="!imgsData[key]" type="button" id="`upload-imagesUrl${key}`" @click="uploadImages(key)">上傳</button>
                 </div>
                 <img class="img-fluid" :src="image">
               </div>
               <!-- 按鍵 -->
               <div v-if="Array.isArray(tempProduct.imagesUrl)">
                 <button class="btn btn-outline-primary btn-sm d-block w-100 mb-1"
-                  @click="tempProduct.imagesUrl.push('')">
+                  @click="tempProduct.imagesUrl.push(''); imgsData.push('')">
                   新增圖片
                 </button>
               </div>
@@ -47,7 +47,7 @@
                   新增圖片
                 </button>
               </div>
-              <button class="btn btn-outline-danger btn-sm d-block w-100" @click="tempProduct.imagesUrl.pop()">
+              <button class="btn btn-outline-danger btn-sm d-block w-100" @click="tempProduct.imagesUrl.pop(); imgsData.pop('')">
                     刪除圖片
               </button>
             </div>
@@ -125,8 +125,10 @@ export default {
     return {
       modal: {},
       tempProduct: {},
-      images: []
-      // imageData: null
+      images: [],
+      formData: '',
+      imgData: null,
+      imgsData: []
     }
   },
   inject: ['emitter'],
@@ -174,14 +176,17 @@ export default {
     createImages () {
       this.tempProduct.imagesUrl = []
       this.tempProduct.imagesUrl.push('')
+      this.imgsData.push('')
     },
-
+    getImgData (e) {
+      const file = e.target.files[0]
+      this.formData = new FormData()
+      this.formData.append('file-to-upload', file)
+      this.imgData = this.formData
+      console.log(this.imgData)
+    },
     uploadImage () {
-      // console.log(this.$refs.file.files[0])
-      const uploadedFile = this.$refs.file.files[0]
-      const formData = new FormData()
-      formData.append('file-to-upload', uploadedFile)
-      this.$http.post(`${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/admin/upload`, formData, {
+      this.$http.post(`${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/admin/upload`, this.formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
@@ -189,6 +194,7 @@ export default {
         .then((response) => {
           if (response.data.success) {
             this.tempProduct.imageUrl = response.data.imageUrl
+            this.imgData = null
             this.emitter.emit('push-message', {
               style: 'success',
               title: '圖片上傳結果',
@@ -216,18 +222,27 @@ export default {
           // }
         })
     },
-    uploadImages (key) {
-      const uploadedFile = this.$refs[`file${key}`][0].files[0]
-      const formData = new FormData()
-      formData.append('file-to-upload', uploadedFile)
+    getImgsData (key) {
+      const file = this.$refs[`file${key}`][0].files[0]
+      this.formData = new FormData()
+      this.formData.append('file-to-upload', file)
+      this.imgsData[key] = this.formData
 
-      this.$http.post(`${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/admin/upload`, formData, {
+      console.log(this.imgsData[key])
+    },
+    uploadImages (key) {
+      // const uploadedFile = this.$refs[`file${key}`][0].files[0]
+      // const formData = new FormData()
+      // formData.append('file-to-upload', uploadedFile)
+
+      this.$http.post(`${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/admin/upload`, this.formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
       })
         .then((response) => {
           this.tempProduct.imagesUrl[key] = response.data.imageUrl
+          this.imgsData[key] = null
         })
         .catch((error) => {
           // alert(error.response.data.message)

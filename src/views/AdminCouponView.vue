@@ -1,12 +1,13 @@
 <template>
-  <div class="container">
+  <div class="container my-5">
     <Loading-component :active="isLoading"></Loading-component>
+    <h1>優惠券管理</h1>
         <!-- 產品modal -->
     <coupon-modal :coupon="tempCoupon" :current-page="currentPage" ref="CouponModal" @get-coupons="getCoupons"></coupon-modal>
     <!-- 刪除modal -->
     <delete-modal :item="tempCoupon" ref="deleteModal" @delete-item="deleteCoupon"></delete-modal>
 
-    <div class="text-end mt-4">
+    <div class="text-end mt-3">
       <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#couponModal" @click="tempCoupon={due_date: new Date().getTime() / 1000, is_enabled:0}">
         建立新的優惠券
       </button>

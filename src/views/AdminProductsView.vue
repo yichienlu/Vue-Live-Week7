@@ -1,13 +1,13 @@
 <template>
-  <div class="container">
-    <h1>Admin Products</h1>
+  <div class="container my-5">
+    <h1>商品管理</h1>
     <Loading-component :active="isLoading"></Loading-component>
     <!-- 產品modal -->
     <admin-product-modal :product="tempProduct" :current-page="currentPage" ref="adminProductModal" @get-products="getProducts"></admin-product-modal>
     <!-- 刪除modal -->
     <delete-modal :item="tempProduct" ref="deleteModal" @delete-item="deleteProduct"></delete-modal>
 
-    <div class="text-end mt-4">
+    <div class="text-end mt-3">
       <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#adminProductModal" @click="tempProduct={imagesUrl:[],is_enabled:0}">
         建立新的產品
       </button>

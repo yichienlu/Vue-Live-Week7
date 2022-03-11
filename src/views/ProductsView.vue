@@ -1,6 +1,6 @@
 <template>
-  <div class="container py-5">
-    <h1 class="text-center">商品列表</h1>
+  <div class="container my-5">
+    <h1>商品列表</h1>
     <loading-component :active="isLoading"></loading-component>
     <!-- 產品Modal -->
     <product-modal :product="product" ref="productModal" @add-to-cart="addToCart"></product-modal>
@@ -10,8 +10,10 @@
       <option value="貓貓">貓貓</option>
       <option value="狗狗">狗狗</option>
     </select>
-    <h3 v-if="category">{{category}}</h3>
-    <h3 v-else>全部商品</h3>
+    <h3 class="text-center">
+      <span v-if="category">{{category}}</span>
+      <span v-else>全部商品</span>
+    </h3>
     <div class="row row-cols-2 row-cols-lg-4 g-3 mb-5">
       <div class="col" v-for="product in products" :key="product.id">
         <div class="card h-100">
