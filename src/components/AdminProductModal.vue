@@ -18,7 +18,7 @@
                 <input id="imageUrl" v-model="tempProduct.imageUrl" type="text" class="form-control form-control-sm mb-2" placeholder="請輸入圖片連結">
                 <div class="input-group input-group-sm mb-2">
                   <input type="file" class="form-control" id="input-imageUrl" aria-label="Upload" ref="file">
-                  <button class="btn btn-outline-secondary" :disabled="!this.imageData" type="button" id="upload-imageUrl" @click="uploadImage">上傳</button>
+                  <button class="btn btn-outline-secondary" :disabled="!$refs.file?.value" type="button" id="upload-imageUrl" @click="uploadImage">上傳</button>
                 </div>
                 <img class="img-fluid" :src="tempProduct.imageUrl">
               </div>
@@ -125,8 +125,8 @@ export default {
     return {
       modal: {},
       tempProduct: {},
-      images: [],
-      imageData: null
+      images: []
+      // imageData: null
     }
   },
   inject: ['emitter'],
