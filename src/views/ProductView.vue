@@ -23,7 +23,7 @@
       </article>
       <div class="col-6">
         <div class="text-center">
-          <img :src="product.shownUrl" class="m-2" style="height: 300px; object-fit: cover;">
+          <img :src="product.shownUrl" class="m-2" style="height: 300px; object-fit: cover; width:100%">
         </div>
         <template v-for="image in product.imagesUrl" :key="image">
           <img :src="image" alt="商品照片" class="images m-2"
