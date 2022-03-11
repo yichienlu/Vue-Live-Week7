@@ -86,7 +86,7 @@ export default {
           this.products = response.data.products
           this.pagination = response.data.pagination
           this.isLoading = false
-          console.log(this.products)
+          console.log(this.products, 1)
         })
         .catch((error) => {
           // alert(error.response.data.message)
@@ -95,8 +95,8 @@ export default {
         })
     },
     getCategories () {
-      console.log(this.products)
-      // this.categories = Array.from(new Set(this.products.map(i => i.category)))
+      console.log(this.products, 2)
+      this.categories = Array.from(new Set(this.products.map(i => i.category)))
     },
     openProductModal (product) {
       this.isLoading = true
@@ -137,10 +137,7 @@ export default {
   },
   mounted () {
     this.getProducts()
-    setTimeout(function () {
-      this.categories = Array.from(new Set(this.products.map(i => i.category)))
-      // console.log(this.products)
-    }, 0)
+    setTimeout(() => this.getCategories(), 0)
   }
 }
 
