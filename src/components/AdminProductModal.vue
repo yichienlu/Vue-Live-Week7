@@ -183,7 +183,6 @@ export default {
       this.formData = new FormData()
       this.formData.append('file-to-upload', file)
       this.imgData = this.formData
-      console.log(this.imgData)
     },
     uploadImage () {
       this.$http.post(`${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/admin/upload`, this.formData, {
@@ -211,15 +210,6 @@ export default {
         })
         .catch((error) => {
           this.$httpMessageState(error.response, '圖片失敗')
-          // if (error.response?.data) {
-          //   this.$httpMessageState(error.response, '圖片失敗')
-          // } else {
-          //   this.emitter.emit('push-message', {
-          //     style: 'danger',
-          //     title: '圖片上傳結果',
-          //     content: '請確認是否正確選取圖片'
-          //   })
-          // }
         })
     },
     getImgsData (key) {
@@ -227,14 +217,8 @@ export default {
       this.formData = new FormData()
       this.formData.append('file-to-upload', file)
       this.imgsData[key] = this.formData
-
-      console.log(this.imgsData[key])
     },
     uploadImages (key) {
-      // const uploadedFile = this.$refs[`file${key}`][0].files[0]
-      // const formData = new FormData()
-      // formData.append('file-to-upload', uploadedFile)
-
       this.$http.post(`${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/admin/upload`, this.formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
@@ -243,6 +227,22 @@ export default {
         .then((response) => {
           this.tempProduct.imagesUrl[key] = response.data.imageUrl
           this.imgsData[key] = null
+          if (response.data.success) {
+            this.tempProduct.imageUrl = response.data.imageUrl
+            this.imgData = null
+            this.emitter.emit('push-message', {
+              style: 'success',
+              title: '圖片上傳結果',
+              content: '圖片上傳成功'
+            })
+          } else {
+            this.$refs.file.value = ''
+            this.emitter.emit('push-message', {
+              style: 'danger',
+              title: '圖片上傳結果',
+              content: response.data.message
+            })
+          }
         })
         .catch((error) => {
           // alert(error.response.data.message)
