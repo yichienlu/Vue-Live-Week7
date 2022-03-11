@@ -5,13 +5,13 @@
     <!-- 產品Modal -->
     <product-modal :product="product" ref="productModal" @add-to-cart="addToCart"></product-modal>
     <!-- 產品Modal -->
-    <select id="productSelect" v-model="category" @change="getProducts(1,category)" class="form-select mb-3">
+    <select id="productSelect" v-model="selectedCategory" @change="getProducts(1,selectedCategory)" class="form-select mb-3">
+      <option value="" disabled>請選擇商品分類</option>
       <option value="">全部商品</option>
-      <option value="貓貓">貓貓</option>
-      <option value="狗狗">狗狗</option>
+      <option v-for="category in categories" :key="category" :value="category">{{ category }}</option>
     </select>
     <h3 class="text-center">
-      <span v-if="category">{{category}}</span>
+      <span v-if="selectedCategory">{{selectedCategory}}</span>
       <span v-else>全部商品</span>
     </h3>
     <div class="row row-cols-2 row-cols-lg-4 g-3 mb-5">
@@ -65,7 +65,8 @@ export default {
       },
       products: [],
       product: {},
-      category: '',
+      categories: [],
+      selectedCategory: '',
       pagination: {},
       currentPage: 1,
       isLoading: false,
@@ -77,20 +78,25 @@ export default {
     PaginationComponent
   },
   methods: {
-    getProducts (page = 1, category = '') {
+    getProducts (page = 1, selectedCategory = '') {
       this.isLoading = true
       this.$http
-        .get(`${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/products/?page=${page}&category=${category}`)
+        .get(`${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/products/?page=${page}&category=${selectedCategory}`)
         .then((response) => {
           this.products = response.data.products
           this.pagination = response.data.pagination
           this.isLoading = false
+          console.log(this.products)
         })
         .catch((error) => {
           // alert(error.response.data.message)
           this.$httpMessageState(error.response, '錯誤訊息')
           this.isLoading = false
         })
+    },
+    getCategories () {
+      console.log(this.products)
+      // this.categories = Array.from(new Set(this.products.map(i => i.category)))
     },
     openProductModal (product) {
       this.isLoading = true
@@ -131,6 +137,10 @@ export default {
   },
   mounted () {
     this.getProducts()
+    setTimeout(function () {
+      this.categories = Array.from(new Set(this.products.map(i => i.category)))
+      // console.log(this.products)
+    }, 0)
   }
 }
 
